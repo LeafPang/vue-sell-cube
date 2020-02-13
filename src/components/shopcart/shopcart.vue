@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="shopcart">
-      <div class="content">
+      <div class="content" @click="togglelist">
         <div class="content-left">
           <div class="logo-wrapper">
             <div class="logo" :class="{'highlight': totalCount>0}">
@@ -12,10 +12,31 @@
           <div class="price" :class="{'highlight':totalPrice>0}">￥{{totalPrice}}</div>
           <div class="desc">另需配送费￥{{deliveryPrice}}元</div>
         </div>
-        <div class="content-right">
+        <div class="content-right" @click.stop.prevent="pay">
           <div class="pay" :class="payClass">{{payDesc}}</div>
         </div>
       </div>
+      <transition name="fold">
+        <div class="shopcart-list" v-show="listShow">
+          <div class="list-header">
+            <h2 class="title">购物车</h2>
+            <span class="empty" @click="empty">清空</span>
+          </div>
+          <div class="list-content">
+            <ul>
+              <li class="food" v-for="food in selectFoods ">
+                <span class="name">{{ food.name }}</span>
+                <div class="price">
+                  <span>￥{{ food.price* food.count }}</span>  
+                </div> 
+                <div class="cartcontrol-wrapper">
+                  <cart-control :food="food" ></cart-control>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </transition>
       <div class="ball-container">
         <div v-for="ball in balls">
           <transition name="drop" @before-enter="beforeDrop" @enter="dropping" @after-enter="afterDrop">
@@ -26,9 +47,13 @@
         </div>
       </div>
     </div>
+    <transition name="fade">
+      <div class="list-mask" v-show="listShow" @click="hideList"></div>
+    </transition>
   </div>
 </template>
 <script>
+import cartControl from "../cartcontrol/cartcontrol.vue";
 export default {
   props:{
     selectFoods:{
@@ -74,6 +99,7 @@ export default {
         },
       ],
       dropBalls:[],
+      fold:true,
     }
   },
   computed:{
@@ -107,7 +133,19 @@ export default {
       }else {
         return '去结算'
       }
-    }
+    },
+    listShow(){
+      // debugger;
+      if(!this.totalCount){
+        this.fold=true;
+        return false;
+      }
+      let show=!this.fold;
+      return show;
+    },
+  },
+  components:{
+    cartControl
   },
   methods:{
     drop(el){
@@ -157,6 +195,27 @@ export default {
         ball.show=false;
         el.style.display="none";
       }
+    },
+    togglelist(){
+      // debugger;
+      if(!this.totalCount){
+        return;
+      }
+      this.fold=!this.fold;
+    },
+    hideList(){
+      this.fold=true;
+    },
+    empty(){
+      this.selectFoods.forEach((food)=>{
+        food.count=0;
+      });
+    },
+    pay(){
+      if(this.totalPrice < this.minPrice){
+        return;
+      }
+      window.alert(`共支付${this.totalPrice}元`);
     }
   }
 }
