@@ -1,0 +1,113 @@
+.detail {
+    position: fixed;
+    z-index: 100;
+    top: 0;
+    left 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    backdrop-filter: blur(10px)
+    opacity:1;
+    background: rgba(7,17,27,0.8);
+    color: #fff;
+    &.fade-enter-active,&.fade-leave-active {
+      transition:all 0.5s;
+    }
+    &.fade-enter,&.fade-leave-active {
+      opacity:0;
+      background:rgba(7,17,27,0);
+    }
+    .detail-wrapper {
+      width: 100%;
+      min-height: 100%;
+      .detail-main {
+        margin-top: 64px;
+        padding-bottom: 64px;
+        .name {
+          line-height:16px;
+          text-align:center;
+          font-size:16px;
+          font-weight:600;
+        }
+        .star-wrapper {
+          margin-top:18px;
+          padding:0 2px;
+          text-align:center;
+        }
+        .title {
+          display:-webkit-box;
+          display:-ms-flexbox;
+          display:flex;
+          width:80%;
+          margin:28px auto 24px auto;
+          .line {
+            position: relative;
+            -webkit-box-flex:1;
+            -ms-flex:1;
+            flex:1;
+            border-bottom:1px solid rgba(255,255,255,0.2);
+            top: -8px;
+          }
+          .text {
+            padding:0 20px;
+            font-weight:700;
+            font-size:14px;
+          }
+        }
+        .supports {
+          width:80%;
+          margin:0 auto;
+          .support-item {
+            padding:0 12px;
+            margin-bottom:12px;
+            font-size: 10px;
+            .icon {
+              display: inline-block
+              width: 16px
+              height: 16px
+              vertical-align: middle
+              margin-right: 6px
+              background-size: 16px 16px
+              background-repeat: no-repeat
+              &.decrease {
+                  bg-image('decrease_2')
+              }
+              &.discount {
+                bg-image('discount_2')
+              }
+              &.guarantee {
+                bg-image('guarantee_2')
+              }
+              &.invoice {
+                bg-image('invoice_2')
+              }
+              &.special {
+                bg-image('special_2')
+              }
+            }
+            .text {
+              line-height: 16px;
+              font-size: 12px;
+            }
+          }
+        }
+        .bulletin {
+          width:80%;
+          margin:0 auto;
+          .content {
+            padding: 0 12px;
+            line-height: 24px;
+            font-size: 12px;
+          }
+        }
+      }
+    }
+  .detail-close {
+    position:relative;
+    width:32px;
+    height:32px;
+    margin:-64px auto 0 auto;
+    clear:both;
+    font-size:32px;
+  }
+  }
