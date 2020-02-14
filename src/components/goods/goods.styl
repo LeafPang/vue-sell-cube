@@ -11,6 +11,7 @@
     width: 80px;
     background: #f3f5f7;
     .menu-item {
+      position: relative;
       display: table;
       height:54px;
       width: 56px;
@@ -30,6 +31,22 @@
         vertical-align: middle;
         font-size: 12px;
         border-top: 1px solid #ddd;
+      }
+      .num {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 24px;
+        height: 16px;
+        line-height: 16px;
+        text-align: center;
+        border-radius: 16px;
+        font-size: 9px;
+        font-weight: 700;
+        color: #fff;
+        background: #f01414;
+        -webkit-box-shadow: 0 4px 8px 0 rgba(0,0,0,0.4);
+        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.4);
       }
       .icon {
         display: inline-block;
@@ -105,6 +122,11 @@
             margin-right: 8px;
             font-size: 14px;
             color: #f01414;  
+          }
+          .old {
+            font-size: 12px;
+            color: #ddd;
+            text-decoration: line-through;  
           }  
         }
         .cartcontrol-wrapper {
