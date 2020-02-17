@@ -2,7 +2,8 @@
   <div class="goods">
     <div class="menu-wrapper" ref="menuWrapper">
       <ul>
-        <li v-for="(item,index) in goods" class="menu-item" :class="{'current':currentIndex===index}">
+        <li v-for="(item,index) in goods" class="menu-item" 
+          :class="{'current':currentIndex===index}" ref="menulist" @click="selectMenu(index,$event)">
           <span class="text border-1px"> 
             <span class="icon" :class="classMap[item.type]" v-show="item.type>0"></span>
             {{ item.name }}
@@ -16,10 +17,11 @@
         <li
           v-for="item in goods"
           class="food-list"
+          ref="foodlist"
         >
           <h1 class="title">{{ item.name }}</h1>
           <ul>
-            <li v-for="food in item.foods" class="food-item" :parant="item.name">
+            <li v-for="food in item.foods" class="food-item" :parant="item.name" >
               <div class="icon">
                 <img
                   :src="food.icon"
@@ -125,8 +127,10 @@ export default {
         probType: 3,
         directionLockThreshold: 0
       },
-      currentIndex:0,
-      selectedFood:{}
+      // currentIndex:0,
+      selectedFood:{},
+      listHeight:[],
+      scrollY:0
     };
   },
   created() {
@@ -150,6 +154,20 @@ export default {
       });
       return foods;
     },
+    currentIndex(){
+        for(let i=0;i<this.listHeight.length;i++){
+          // debugger;
+          let height1=this.listHeight[i];
+          let height2=this.listHeight[i+1];
+          if(!height2 || (this.scrollY>=height1 && this.scrollY<height2)){
+            this._followScroll(i);
+            return i;
+          }
+          
+        }
+        return 0;
+     
+    }
   },
   components: {
     shopcart,
@@ -171,6 +189,7 @@ export default {
         this._initMenuCountAndParent();
         this.$nextTick(()=>{
           this._initScroll();
+          this._calculateHeight();
         });
         // console.log(res.goods);
       });
@@ -196,7 +215,16 @@ export default {
         click:true
       });
       this.foodScroll=new BScroll(this.$refs.foodWrapper,{
-        click:true
+        click:true,
+        probeType:3
+      });
+
+      // 监听右侧食物列表的滚动，以此来改变scrollY的数值，从而触发currentIndex值得改变，从而触发_followScroll()函数的执行
+      this.foodScroll.on('scroll',(pos)=>{
+        // debugger;
+        if(pos.y<=0){
+          this.scrollY=Math.abs(Math.round(pos.y));
+        }
       });
     },
     _initMenuCountAndParent(){
@@ -222,6 +250,33 @@ export default {
         });
         good.count=count;
       });
+    },
+    _calculateHeight(){
+      let foodlist=this.$refs.foodlist;
+      let height=0;
+      this.listHeight.push(height);
+      for(let i=0;i<foodlist.length;i++){
+        let item=foodlist[i];
+        height+=item.clientHeight;
+        this.listHeight.push(height);
+      }
+    },
+    _followScroll(index){
+      // debugger;
+      let menulist=this.$refs.menulist;
+      let el=menulist[index];
+      this.menuScroll.scrollToElement(el,300,0,-100);
+    },
+    // 点击左侧菜单，右侧跳到相应的分类
+    selectMenu(index,event){
+      if(!event._constructed){
+        return;
+      }
+      // debugger;
+      let foodlist=this.$refs.foodlist;
+      let el=foodlist[index];
+      this.foodScroll.scrollToElement(el,300);
+      // this.currentIndex=index;
     }
   }
 };
