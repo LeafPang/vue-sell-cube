@@ -98,7 +98,11 @@
       </cube-scroll-nav> 
 
     </div> -->
-    <shopcart ref="shopcart" :selectFoods="selectFoods" :deliveryPrice="sellers.deliveryPrice" :minPrice="sellers.minPrice"></shopcart>
+    <shopcart ref="shopcart" :selectFoods="selectFoods" 
+    :deliveryPrice="sellers.deliveryPrice" 
+    :minPrice="sellers.minPrice"
+    @emptyGoodsCount="emptyGoodsCount"
+    ></shopcart>
   </div>
 
 </template>
@@ -277,6 +281,12 @@ export default {
       let el=foodlist[index];
       this.foodScroll.scrollToElement(el,300);
       // this.currentIndex=index;
+    },
+    // 将goods的 count值置为0
+    emptyGoodsCount(){
+      this.goods.forEach((good)=>{
+        good.count=0;
+      });
     }
   }
 };

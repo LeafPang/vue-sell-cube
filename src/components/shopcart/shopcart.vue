@@ -22,7 +22,7 @@
             <h2 class="title">购物车</h2>
             <span class="empty" @click="empty">清空</span>
           </div>
-          <div class="list-content">
+          <div class="list-content" ref="listcontent">
             <ul>
               <li class="food" v-for="food in selectFoods ">
                 <span class="name">{{ food.name }}</span>
@@ -30,7 +30,7 @@
                   <span>￥{{ food.price* food.count }}</span>  
                 </div> 
                 <div class="cartcontrol-wrapper">
-                  <cart-control :food="food" ></cart-control>
+                  <cart-control :food="food" @add="addGoods"></cart-control>
                 </div>
               </li>
             </ul>
@@ -54,6 +54,7 @@
 </template>
 <script>
 import cartControl from "../cartcontrol/cartcontrol.vue";
+import BScroll from 'better-scroll';
 export default {
   props:{
     selectFoods:{
@@ -141,6 +142,19 @@ export default {
         return false;
       }
       let show=!this.fold;
+      // 购物车列表变成可滚动
+      if(show){
+        this.$nextTick(()=>{
+          if(!this.listconscroll){
+            this.listconscroll=new BScroll(this.$refs.listcontent,{
+              click:true
+            });
+          }else {
+            this.listconscroll.refresh();
+          }
+        });
+        
+      }
       return show;
     },
   },
@@ -210,12 +224,34 @@ export default {
       this.selectFoods.forEach((food)=>{
         food.count=0;
       });
+      // 清空操作，有以下两个方法
+      // 方法一：子组件派发事件
+      // 方法二：直接调用父组件里面的方法
+      // this.$emit("emptyGoodsCount");
+      this.$parent.emptyGoodsCount();
+      
     },
     pay(){
       if(this.totalPrice < this.minPrice){
         return;
       }
-      window.alert(`共支付${this.totalPrice}元`);
+      // 引用cubeui的dilog组件，该组件基于create-api实现
+      this.dialogCom=this.$createDialog({
+        type:"alert",
+        title:"支付",
+        content:`一共支付${this.totalPrice}元`,
+        onConfirm:()=>{
+          this.empty();
+        }
+      }
+     );
+      this.dialogCom.show();
+      
+      // window.alert(`共支付${this.totalPrice}元`);
+    },
+    // 购物车列表点击增加商品时，也有小球动效
+    addGoods(el,name){
+      this.drop(el);
     }
   }
 }

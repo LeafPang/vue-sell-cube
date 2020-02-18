@@ -20,7 +20,8 @@ export default {
   },
   methods:{
     decreaseCart(){
-      if(!this.food.count){
+      // debugger;
+      if(this.food.count){
         this.food.count--;
       }
     },
