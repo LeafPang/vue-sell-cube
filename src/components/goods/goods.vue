@@ -1,5 +1,6 @@
 <template>
-  <div class="goods">
+<div>
+   <div class="goods">
     <div class="menu-wrapper" ref="menuWrapper">
       <ul>
         <li v-for="(item,index) in goods" class="menu-item" 
@@ -21,7 +22,7 @@
         >
           <h1 class="title">{{ item.name }}</h1>
           <ul>
-            <li v-for="food in item.foods" class="food-item" :parant="item.name" >
+            <li v-for="food in item.foods" class="food-item" :parant="item.name" @click="selectOneFood(food,$event)">
               <div class="icon">
                 <img
                   :src="food.icon"
@@ -104,6 +105,9 @@
     @emptyGoodsCount="emptyGoodsCount"
     ></shopcart>
   </div>
+  <food ref="foodCom" :food="selectedFood"></food>
+</div>
+ 
 
 </template>
 <script>
@@ -111,6 +115,7 @@ import Vue from 'vue'
 import { getGoods } from "api";
 import shopcart from "../shopcart/shopcart.vue";
 import cartControl from "../cartcontrol/cartcontrol.vue";
+import food from '../food/food.vue';
 import BScroll from 'better-scroll';
 export default {
   name: "goods",
@@ -175,7 +180,8 @@ export default {
   },
   components: {
     shopcart,
-    cartControl
+    cartControl,
+    food
   },
   methods: {
     changeHandler(label) {
@@ -287,6 +293,11 @@ export default {
       this.goods.forEach((good)=>{
         good.count=0;
       });
+    },
+    // 点击单条食物，展示食物详情
+    selectOneFood(obj,evet){
+      this.selectedFood=obj;
+      this.$refs.foodCom.show();
     }
   }
 };
