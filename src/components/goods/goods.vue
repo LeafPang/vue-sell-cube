@@ -105,7 +105,7 @@
     @emptyGoodsCount="emptyGoodsCount"
     ></shopcart>
   </div>
-  <food ref="foodCom" :food="selectedFood"></food>
+  <food ref="foodCom" :food="selectedFood" @add="addGoods"></food>
 </div>
  
 
