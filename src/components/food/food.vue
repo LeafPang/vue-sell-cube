@@ -48,22 +48,23 @@
           :ratings="food.ratings"
           @select="selectHead"
           @toggle="toggleCon"
+          v-if="computerRatings && computerRatings.length"
           ></ratingselect>
           <div class="rating-wrapper">
-            <ul>
-              <li class="rating-item" v-for="rating in computerRatings">
+            <ul v-if="computerRatings && computerRatings.length">
+              <li class="rating-item" v-for="rating in computerRatings" >
                 <div class="user">
                   <span class="name">{{rating.username}}</span>
                   <img :src="rating.avatar" alt="" width="12" height="12">
                 </div>
-                <div class="time">{{rating.rateTime}}</div>
+                <div class="time">{{ format(rating.rateTime) }}</div>
                 <div class="text">
                   <span :class="{'icon-thumb_up':rating.rateType === 0,'icon-thumb_down':rating.rateType === 1}"></span>
                   {{rating.text}}
                 </div>
               </li>  
             </ul>  
-            <div class="no-rating" v-show="!food.ratings">暂无评价</div>
+            <div class="no-rating" v-show="!computerRatings || !computerRatings.length">暂无评价</div>
           </div> 
         </div>
       </div>
@@ -76,6 +77,7 @@ import cartcontrol from "../cartcontrol/cartcontrol.vue";
 import split from "../split/split.vue";
 import ratingselect from "../ratingselect/ratingselect.vue";
 import BScroll from "better-scroll";
+import moment from 'moment';
 
 const ALL=2;
 export default {
@@ -110,20 +112,25 @@ export default {
     },
     computerRatings(){
       let ret=[];
-      this.ratings.forEach((rating)=>{
-        if(this.onlyContent && !rating.text){
-          return;
-        }
-        if(this.selectType === ALL || this.selectType === rating.rateType){
-          ret.push(rating);
-        }
-      });
-      return ret;
+      if(this.food.ratings && this.food.ratings.length){
+        this.food.ratings.forEach((rating)=>{
+          if(this.onlyContent && !rating.text){
+            return;
+          }
+          if(this.selectType === ALL || this.selectType === rating.rateType){
+            ret.push(rating);
+          }
+        });
+        return ret;
+      }
+      
     }
   },
   methods: {
     show() {
       this.showFlag = true;
+      this.onlyContent=true;
+      this.selectType=ALL;
       this.$nextTick(() => {
         // debugger;
         if (!this.scroll) {
@@ -155,6 +162,21 @@ export default {
     toggleCon(){
       // debugger;
       this.onlyContent=!this.onlyContent;
+    },
+    // 格式化时间戳
+    format(time){
+      return moment(time).format('YYYY-MM-DD hh:mm');
+    },
+    //根据选择类型，显示与隐藏评论
+    needShow(selectedtype,text){
+      if(this.onlyContent && !text){
+        return false;
+      }
+      if(this.selectType === ALL){
+        return true;
+      }else {
+        return this.selectType === selectedtype;
+      }
     }
   }
 };

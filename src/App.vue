@@ -64,15 +64,20 @@ export default {
   width 100%;
   height:40px;
   line-height:40px;
+  border-bottom:1px solid #ddd;
+  position:relative;
+  z-index:10;
   .tab-item {
     -webkit-box-flex:1;
     -ms-flex:1;
     flex:1;
     text-align:center;
+    height:100%;
+    background:#fff;
     & >a {
       display:block;
       width:100%;
-      height:39px;
+      height:100%;
       font-size:14px;
       color:rgb(77, 85, 93)
       &.active {
