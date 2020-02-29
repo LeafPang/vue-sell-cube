@@ -11,7 +11,9 @@
     "better-scroll": "^1.15.2",
     "core-js": "^3.4.4",
     "cube-ui": "~1.12.15",
+    "good-storage": "^1.1.1",
     "moment": "^2.24.0",
+    "query-string": "^6.11.0",
     "vue": "^2.6.10",
     "vue-router": "^3.1.5"
   },

@@ -48,7 +48,7 @@
           :ratings="food.ratings"
           @select="selectHead"
           @toggle="toggleCon"
-          v-if="computerRatings && computerRatings.length"
+          v-if="food.ratings && food.ratings.length"
           ></ratingselect>
           <div class="rating-wrapper">
             <ul v-if="computerRatings && computerRatings.length">

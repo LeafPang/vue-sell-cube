@@ -67,6 +67,9 @@ import BScroll from 'better-scroll';
 import moment from 'moment';
 import ratingselect from '../ratingselect/ratingselect.vue';
 import myMixins from '../mixins/mixins.js';
+import storage from 'good-storage';
+import qus from 'query-string';
+
 const ALL=2;
 export default {
   props:{
@@ -113,7 +116,9 @@ export default {
   },
   methods:{
     fetch(){
-      getRatings().then((res)=>{
+      getRatings({
+        id:this.sellers.id
+      }).then((res)=>{
         this.ratings=res.ratings;
         this.$nextTick(()=>{
           if(!this.scroll){
